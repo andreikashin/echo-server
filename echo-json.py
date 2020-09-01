@@ -4,17 +4,33 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
 import json
 
+HOST = 'localhost'
+PORT = 8000
+
 
 class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.end_headers()
-        self.wfile.write(json.dumps({
-            'method': self.command,
-            'path': self.path,
-            'request_version': self.request_version,
-            'protocol_version': self.protocol_version
-        }).encode())
+        self.wfile.write(json.dumps([
+            {
+                "id": 210,
+                "userId": "123",
+                "projectId": "1",
+                "info": "null",
+                "registeredAt": "2020-06-02T23:01:28.0000000+00:00",
+                "eventType": "START",
+            },
+            {
+                "id": 211,
+                "userId": "321",
+                "projectId": "1",
+                "info": "text",
+                "registeredAt": "2020-06-03T00:02:36.0000000+00:00",
+                "eventType": "PAUSE",
+
+            }
+        ]).encode())
         return
 
     def do_POST(self):
@@ -25,19 +41,29 @@ class RequestHandler(BaseHTTPRequestHandler):
         parsed_path = urlparse(self.path)
         self.send_response(200)
         self.end_headers()
-        self.wfile.write(json.dumps({
-            'method': self.command,
-            'path': self.path,
-            'real_path': parsed_path.query,
-            'query': parsed_path.query,
-            'request_version': self.request_version,
-            'protocol_version': self.protocol_version,
-            'body': data
-        }).encode())
+        self.wfile.write(json.dumps([
+            {
+                "id": 210,
+                "userId": "123",
+                "projectId": "1",
+                "info": "null",
+                "registeredAt": "2020-06-02T23:01:28.0000000+00:00",
+                "eventType": "START",
+            },
+            {
+                "id": 211,
+                "userId": "321",
+                "projectId": "1",
+                "info": "text",
+                "registeredAt": "2020-06-03T00:02:36.0000000+00:00",
+                "eventType": "PAUSE",
+
+            }
+        ]).encode())
         return
 
 
 if __name__ == '__main__':
-    server = HTTPServer(('localhost', 8000), RequestHandler)
-    print('Starting server at http://localhost:8000')
+    server = HTTPServer((HOST, PORT), RequestHandler)
+    print(f"Now listening on: http://{HOST}:{PORT}")
     server.serve_forever()
